@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Intermediate Web Project</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Global Styles */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+    }
+
+    header {
+      background: #333;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-around;
+      background: #555;
+      color: white;
+      padding: 10px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .todo {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    ul li {
+      background: #eee;
+      padding: 10px;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Intermediate Web Development</h1>
+  </header>
+
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Contact</a>
+    <a href="#">To-Do</a>
+  </nav>
+
+  <div class="container">
+    <!-- Contact Form -->
+    <form id="contactForm">
+      <h2>Contact Us</h2>
+      <input type="text" id="name" placeholder="Your Name" required>
+      <input type="email" id="email" placeholder="Your Email" required>
+      <textarea id="message" rows="4" placeholder="Your Message" required></textarea>
+      <button type="submit">Submit</button>
+    </form>
+
+    <!-- To-Do List -->
+    <div class="todo">
+      <h2>To-Do List</h2>
+      <input type="text" id="todoInput" placeholder="Enter new task">
+      <button onclick="addTodo()">Add</button>
+      <ul id="todoList"></ul>
+    </div>
+  </div>
+
+  <script>
+    // Contact Form Validation
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+
+      const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+      if (name === "" || email === "" || message === "") {
+        alert("Please fill out all fields.");
+        return;
+      }
+
+      if (!emailPattern.test(email)) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+
+      alert("Form submitted successfully!");
+      document.getElementById('contactForm').reset();
+    });
+
+    // To-Do List Functionality
+    function addTodo() {
+      const input = document.getElementById('todoInput');
+      const task = input.value.trim();
+      if (task === "") {
+        alert("Please enter a task.");
+        return;
+      }
+
+      const li = document.createElement('li');
+      li.textContent = task;
+
+      const delBtn = document.createElement('button');
+      delBtn.textContent = "Delete";
+      delBtn.style.marginLeft = "10px";
+      delBtn.style.backgroundColor = "#dc3545";
+      delBtn.style.color = "white";
+      delBtn.style.border = "none";
+      delBtn.style.borderRadius = "3px";
+      delBtn.style.cursor = "pointer";
+
+      delBtn.onclick = function () {
+        li.remove();
+      };
+
+      li.appendChild(delBtn);
+      document.getElementById('todoList').appendChild(li);
+      input.value = "";
+    }
+  </script>
+
+</body>
+</html>

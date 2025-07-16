@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Full Web Dev Project</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    header, footer { background: #333; color: white; text-align: center; padding: 10px 0; }
+    nav a { margin: 0 15px; color: white; text-decoration: none; }
+    section { padding: 20px; }
+    h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; }
+
+    /* Portfolio */
+    .portfolio { background: #f4f4f4; }
+    .project { margin: 10px 0; }
+
+    /* To-do App */
+    #todo input { padding: 8px; margin-right: 5px; }
+    #tasks li { margin: 5px 0; }
+    .done { text-decoration: line-through; }
+
+    /* Products */
+    .product { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+    .controls { margin: 10px 0; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>My Web Projects</h1>
+  <nav>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#todo">To-Do App</a>
+    <a href="#products">Product Page</a>
+  </nav>
+</header>
+
+<!-- Portfolio Section -->
+<section id="portfolio" class="portfolio">
+  <h2>About Me</h2>
+  <p>Hello, I'm a web developer passionate about building responsive, interactive websites.</p>
+
+  <h2>Projects</h2>
+  <div class="project">
+    <strong>To-Do List App</strong><br>
+    A JavaScript app with local storage.
+  </div>
+  <div class="project">
+    <strong>Product Filter Page</strong><br>
+    A filtering and sorting UI with vanilla JS.
+  </div>
+
+  <h2>Contact</h2>
+  <p>Email: yourname@example.com</p>
+</section>
+
+<!-- To-Do App -->
+<section id="todo">
+  <h2>To-Do List</h2>
+  <input type="text" id="taskInput" placeholder="Enter task">
+  <button onclick="addTask()">Add</button>
+  <ul id="tasks"></ul>
+</section>
+
+<!-- Product Listing -->
+<section id="products">
+  <h2>Product Listing</h2>
+
+  <div class="controls">
+    <label>Filter by category:
+      <select id="categoryFilter" onchange="filterAndSort()">
+        <option value="all">All</option>
+        <option value="electronics">Electronics</option>
+        <option value="clothing">Clothing</option>
+      </select>
+    </label>
+
+    <label>Sort by price:
+      <select id="sortPrice" onchange="filterAndSort()">
+        <option value="none">None</option>
+        <option value="asc">Low to High</option>
+        <option value="desc">High to Low</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="productList"></div>
+</section>
+
+<footer>
+  <p>© 2025 Your Name</p>
+</footer>
+
+<script>
+  // To-Do App
+  const taskInput = document.getElementById("taskInput");
+  const tasksList = document.getElementById("tasks");
+
+  function loadTasks() {
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasksList.innerHTML = "";
+    tasks.forEach((task, i) => {
+      const li = document.createElement("li");
+      li.textContent = task.text;
+      if (task.done) li.classList.add("done");
+      li.onclick = () => toggleTask(i);
+      li.ondblclick = () => deleteTask(i);
+      tasksList.appendChild(li);
+    });
+  }
+
+  function addTask() {
+    const text = taskInput.value.trim();
+    if (!text) return;
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks.push({ text, done: false });
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    taskInput.value = "";
+    loadTasks();
+  }
+
+  function toggleTask(index) {
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks[index].done = !tasks[index].done;
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    loadTasks();
+  }
+
+  function deleteTask(index) {
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks.splice(index, 1);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    loadTasks();
+  }
+
+  loadTasks();
+
+  // Product Page
+  const products = [
+    { name: "Phone", category: "electronics", price: 500 },
+    { name: "T-Shirt", category: "clothing", price: 20 },
+    { name: "Laptop", category: "electronics", price: 1000 },
+    { name: "Jeans", category: "clothing", price: 40 },
+  ];
+
+  function filterAndSort() {
+    const category = document.getElementById("categoryFilter").value;
+    const sort = document.getElementById("sortPrice").value;
+    let filtered = products.filter(p => category === "all" || p.category === category);
+    
+    if (sort === "asc") {
+      filtered.sort((a, b) => a.price - b.price);
+    } else if (sort === "desc") {
+      filtered.sort((a, b) => b.price - a.price);
+    }
+
+    const list = document.getElementById("productList");
+    list.innerHTML = "";
+    filtered.forEach(p => {
+      list.innerHTML += `<div class="product">
+        <strong>${p.name}</strong><br>
+        Category: ${p.category}<br>
+        Price: ₹${p.price}
+      </div>`;
+    });
+  }
+
+  filterAndSort();
+</script>
+</body>
+</html>
